@@ -28,3 +28,5 @@ TEST(iterator, iterator_traits) {
     // EXPECT_FALSE(tinystl::is_bidirectional_iterator<std::list<int>>::value);
 
 }
+TEST(iterator, distance) {
+}
