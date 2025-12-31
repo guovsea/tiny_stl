@@ -1,4 +1,4 @@
-#ifndef TINYSTL_ITERATOR_H
+﻿#ifndef TINYSTL_ITERATOR_H
 #define TINYSTL_ITERATOR_H
 
 #include <cstddef>
@@ -9,9 +9,9 @@
 namespace tinystl {
     struct input_iterator_tag {};
     struct output_iterator_tag {};
-    struct forward_iterator_tag {};
-    struct bidirectional_iterator_tag {};
-    struct random_access_iterator_tag {};
+    struct forward_iterator_tag : input_iterator_tag {};
+    struct bidirectional_iterator_tag : forward_iterator_tag {};
+    struct random_access_iterator_tag : bidirectional_iterator_tag {};
 
     // iterator 必须有这 5 种类型成员
     template<typename Category, typename T, typename Distance = std::ptrdiff_t,
@@ -55,8 +55,8 @@ namespace tinystl {
     };
 
     template<typename Iterator, typename Category>
-    struct has_iterator_category_of<Iterator, Category, std::enable_if<std::is_convertible<typename iterator_traits<
-        Iterator>::iterator_category, Category>::value> > : true_type {
+    struct has_iterator_category_of<Iterator, Category, enable_if<std::is_convertible<typename iterator_traits<
+        Iterator>::iterator_category, Category>::value, Category> > : true_type {
     };
 
     template<typename Iterator>

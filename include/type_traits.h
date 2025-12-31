@@ -1,4 +1,4 @@
-#ifndef TINYSTL_TYPE_TRAITS_H
+﻿#ifndef TINYSTL_TYPE_TRAITS_H
 #define TINYSTL_TYPE_TRAITS_H
 
 namespace tinystl {
@@ -15,6 +15,15 @@ namespace tinystl {
 
     template <typename...>
     using void_t = void;
+
+    template <bool, typename T>
+    struct enable_if : false_type {};
+
+    template <typename T>
+    struct enable_if<true, T> : true_type {
+        typedef T type;
+    };
+
 }
 
 #endif //TINYSTL_TYPE_TRAITS_H
