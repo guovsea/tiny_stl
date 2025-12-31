@@ -1,0 +1,7 @@
+﻿#ifndef TINYSTL_STREAM_ITERATOR_H
+#define TINYSTL_STREAM_ITERATOR_H
+
+namespace tinystl {
+	
+}
+#endif // TINYSTL_STREAM_ITERATOR_H
