@@ -1,6 +1,10 @@
 ﻿#include <vector>
 #include <list>
 #include <forward_list>
+#include <map>
+#include <unordered_map>
+#include <set>
+#include <unordered_set>
 #include "iterator.h"
 #include "stream_iterator.h"
 #include "gtest/gtest.h"
@@ -14,19 +18,32 @@ TEST(iterator, has_iterator_category) {
     struct B {
     };
     EXPECT_FALSE(tinystl::has_iterator_category<B>::value);
-
 }
 
 TEST(iterator, iterator_traits) {
-    // 无法萃取标准库
-    // EXPECT_TRUE(tinystl::is_input_iterator<std::vector<int>>::value);
-    // EXPECT_TRUE(tinystl::is_output_iterator<std::vector<int>>::value);
+#ifdef USING_STD_ITERATOR_TAG
+    EXPECT_TRUE(tinystl::is_input_iterator<std::istream_iterator<int>>::value);
+    EXPECT_TRUE(tinystl::is_output_iterator<std::ostream_iterator<int>>::value);
 
-    // EXPECT_TRUE(tinystl::is_random_access_iterator<std::vector<int>>::value);
-    // EXPECT_TRUE(!tinystl::is_random_access_iterator<std::list<int>>::value);
+    EXPECT_TRUE(tinystl::is_random_access_iterator<std::vector<int>::iterator>::value);
+    EXPECT_FALSE(tinystl::is_bidirectional_iterator<std::forward_list<int>::iterator>::value);
 
-    // EXPECT_TRUE(tinystl::is_bidirectional_iterator<std::forward_list<int>>::value);
-    // EXPECT_FALSE(tinystl::is_bidirectional_iterator<std::list<int>>::value);
+    EXPECT_TRUE(tinystl::is_bidirectional_iterator<std::list<int>::iterator>::value);
+
+    EXPECT_TRUE((tinystl::is_bidirectional_iterator<std::map<int, int>::iterator>::value));
+    EXPECT_TRUE((!tinystl::is_random_access_iterator<std::map<int, int>::iterator>::value));
+    EXPECT_TRUE((tinystl::is_forward_iterator<std::unordered_map<int, int>::iterator>::value));
+
+    EXPECT_TRUE((tinystl::is_bidirectional_iterator<std::set<int>::iterator>::value));
+
+    EXPECT_TRUE((tinystl::is_forward_iterator<std::unordered_set<int>::iterator>::value));
+#endif
+    struct A {
+
+    };
+    EXPECT_TRUE(tinystl::is_input_iterator<tinystl::istream_iterator<int>>::value);
+    EXPECT_FALSE(tinystl::is_iterator<A>::value);
+    EXPECT_TRUE(tinystl::is_iterator<tinystl::istream_iterator<int>>::value);
 
 }
 

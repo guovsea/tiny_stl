@@ -6,12 +6,22 @@
 
 #include "type_traits.h"
 
+# define USING_STD_ITERATOR_TAG
 namespace tinystl {
+#ifdef USING_STD_ITERATOR_TAG
+    using input_iterator_tag = std::input_iterator_tag;
+    using output_iterator_tag = std::output_iterator_tag;
+    using forward_iterator_tag = std::forward_iterator_tag;
+    using bidirectional_iterator_tag = std::bidirectional_iterator_tag;
+    using random_access_iterator_tag = std::random_access_iterator_tag;
+#else
     struct input_iterator_tag {};
     struct output_iterator_tag {};
     struct forward_iterator_tag : input_iterator_tag {};
     struct bidirectional_iterator_tag : forward_iterator_tag {};
     struct random_access_iterator_tag : bidirectional_iterator_tag {};
+#endif
+
 
     // iterator 必须有这 5 种类型成员
     template<typename Category, typename T, typename Distance = std::ptrdiff_t,
@@ -55,8 +65,8 @@ namespace tinystl {
     };
 
     template<typename Iterator, typename Category>
-    struct has_iterator_category_of<Iterator, Category, enable_if<std::is_convertible<typename iterator_traits<
-        Iterator>::iterator_category, Category>::value, Category> > : true_type {
+    struct has_iterator_category_of<Iterator, Category, typename enable_if<std::is_convertible<typename iterator_traits<
+        Iterator>::iterator_category, Category>::value>::type > : true_type {
     };
 
     template<typename Iterator>
@@ -81,7 +91,7 @@ namespace tinystl {
     struct is_random_access_iterator: has_iterator_category_of<Iterator, random_access_iterator_tag> {};
 
     template<typename Iterator>
-    struct is_iterator: bool_constant<is_output_iterator<Iterator>::value && is_input_iterator<Iterator>::value> {};
+    struct is_iterator: bool_constant<is_output_iterator<Iterator>::value || is_input_iterator<Iterator>::value> {};
 
     // 原生指针的 Partial Specialization
     template<typename T>
