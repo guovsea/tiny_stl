@@ -2,6 +2,7 @@
 #include <list>
 #include <forward_list>
 #include "iterator.h"
+#include "stream_iterator.h"
 #include "gtest/gtest.h"
 
 
@@ -28,5 +29,30 @@ TEST(iterator, iterator_traits) {
     // EXPECT_FALSE(tinystl::is_bidirectional_iterator<std::list<int>>::value);
 
 }
-TEST(iterator, distance) {
+
+TEST(iterator, istream_iterator) {
+    std::istringstream is{"1 2 3 4"};
+    tinystl::istream_iterator<int> it{is};
+    EXPECT_EQ(*it, 1);
+    EXPECT_EQ(*++it, 2);
+    EXPECT_EQ(*it++, 2);
+    EXPECT_EQ(*it, 3);
+    EXPECT_NE(it, tinystl::istream_iterator<int>{});
+    ++it;
+    auto tmp = it;
+    EXPECT_EQ(*tmp, 4);
+    ++it;
+    EXPECT_EQ(it, tinystl::istream_iterator<int>{});
+}
+
+TEST(iterator, functions) {
+    std::istringstream is{"1 2 3 4"};
+    tinystl::istream_iterator<int> it{is};
+    tinystl::advance(it, 1);
+    EXPECT_EQ(*it, 2);
+
+    std::istringstream is1{"1 2 3 4"};
+    tinystl::istream_iterator<int> first{is1};
+    auto distance = tinystl::distance(first, tinystl::istream_iterator<int>{});
+    EXPECT_EQ(distance, 4);
 }

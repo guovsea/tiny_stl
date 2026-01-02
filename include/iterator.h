@@ -104,19 +104,19 @@ namespace tinystl {
 
     template<typename Iterator>
     auto trait_category(const Iterator&) {
-        typedef iterator_traits<Iterator>::iterator_category Category;  // 是空类
+        typedef typename iterator_traits<Iterator>::iterator_category Category;  // 是空类
         return Category{};
     }
 
     template<typename Iterator>
     auto trait_distance(const Iterator&) {
         // 只使用类型，不创建值（可能没有构造），不是空类
-        return static_cast<iterator_traits<Iterator>::difference_type*>(nullptr); 
+        return static_cast<typename iterator_traits<Iterator>::difference_type*>(nullptr);
     }
 
     template<typename Iterator>
     auto trait_value_type(const Iterator&) {
-        return static_cast<iterator_traits<Iterator>::value_type*>(nullptr); 
+        return static_cast<typename iterator_traits<Iterator>::value_type*>(nullptr);
     }
 
     /*
@@ -124,8 +124,8 @@ namespace tinystl {
     */
 
     template<typename InputIterator>
-    typename InputIterator::distance_type distance_dispatch(InputIterator first, InputIterator last, input_iterator_tag) {
-        InputIterator::distance_type  n = 0;
+    typename InputIterator::difference_type distance_dispatch(InputIterator first, InputIterator last, input_iterator_tag) {
+        typename InputIterator::difference_type  n = 0;
         while (first != last) {
             ++first;
             ++n;
@@ -134,12 +134,12 @@ namespace tinystl {
     };
 
     template<typename RandomIterator>
-    typename RandomIterator::distance_type distance_dispatch(RandomIterator first, RandomIterator last, random_access_iterator_tag) {
+    typename RandomIterator::difference_type distance_dispatch(RandomIterator first, RandomIterator last, random_access_iterator_tag) {
         return last - first;
     };
 
     template<typename Iterator>
-    typename Iterator::distance_type distance(Iterator first, Iterator last) {
+    typename Iterator::difference_type distance(Iterator first, Iterator last) {
         return distance_dispatch(first, last, trait_category(first));
     }
 
@@ -170,7 +170,7 @@ namespace tinystl {
 
     template<typename Iterator, typename Distance>
     void advance(Iterator& it, Distance n) {
-        return advance_dispatch(it, n, trait_category(Iterator))
+        return advance_dispatch(it, n, trait_category(it));
     }
 
     /*
@@ -192,9 +192,9 @@ namespace tinystl {
         typedef reverse_iterator<Iterator>    self;
 
     public:
-        reverse_iterator() {}
+        reverse_iterator() = default;
         explicit reverse_iterator(iterator_type it): cur_{it} { }
-        reverse_iterator(const self& rhs): cur{rhs.cur_} { }
+        reverse_iterator(const self& rhs) = default;
 
         iterator_type base() const {
             return cur_;
@@ -273,7 +273,7 @@ namespace tinystl {
 
     template<typename Iterator>
     bool operator>=(const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
-        return !(lhs < rhs)
+        return !(lhs < rhs);
     }
 
 }

@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 add_library(tinystl INTERFACE
     include/type_traits.h
     include/iterator.h
+    include/stream_iterator.h
 )
 target_include_directories(tinystl INTERFACE include)
 add_library(tinystl::tinystl ALIAS tinystl)
