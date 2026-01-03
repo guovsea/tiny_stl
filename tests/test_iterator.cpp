@@ -5,9 +5,10 @@
 #include <unordered_map>
 #include <set>
 #include <unordered_set>
+#include <gtest/gtest.h>
+
 #include "iterator.h"
 #include "stream_iterator.h"
-#include "gtest/gtest.h"
 
 
 TEST(iterator, has_iterator_category) {

@@ -11,7 +11,8 @@ FetchContent_MakeAvailable(gtest)
 enable_testing()
 
 add_executable(run_tests
-        test_iterator.cpp)
+        test_iterator.cpp
+        test_allocator.cpp)
 
 target_include_directories(run_tests PRIVATE
     ${CMAKE_SOURCE_DIR}

@@ -9,6 +9,10 @@ add_library(tinystl INTERFACE
     include/type_traits.h
     include/iterator.h
     include/stream_iterator.h
+    include/vector.h
+    include/utility.h
+        include/allocator.h
+        include/construct.h
 )
 target_include_directories(tinystl INTERFACE include)
 add_library(tinystl::tinystl ALIAS tinystl)
