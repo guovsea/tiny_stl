@@ -2,6 +2,7 @@
 #define TINYSTL_CONSTRUCT_H
 #include <memory>
 
+#include "type_traits.h"
 #include "utility.h"
 
 namespace tinystl {
@@ -13,36 +14,36 @@ namespace tinystl {
 
     // 调用对象的析构函数
     template <typename T>
-    void destroy_at(T* ptr, std::false_type) {
+    void destroy_at(T* ptr, std::true_type) {
         // do nothing
     }
 
     template <typename T>
-    void destroy_at(T* ptr, std::true_type) {
+    void destroy_at(T* ptr, std::false_type) {
         if (ptr)
             ptr->~T();
     }
 
     template <typename T>
     void destroy(T* ptr) {
-        _destroy_at(ptr, !std::is_trivially_destructible<T>{});
-    }
-
-    template <typename ForwardIterator>
-    void destroy(ForwardIterator first, ForwardIterator last, std::false_type) {
-        // do nothing
+        destroy_at(ptr, std::is_trivially_destructible<T>{});
     }
 
     template <typename ForwardIterator>
     void destroy(ForwardIterator first, ForwardIterator last, std::true_type) {
+        // do nothing
+    }
+
+    template <typename ForwardIterator>
+    void destroy(ForwardIterator first, ForwardIterator last, std::false_type) {
         for (ForwardIterator it = first; it != last; ++it) {
-            destroy_at(std::addressof(*it));
+            destroy_at(std::addressof(*it), std::false_type{});
         }
     }
     
     template <typename ForwardIterator>
     void destroy(ForwardIterator first, ForwardIterator last) {
-        destroy(first, last, !std::is_trivially_destructible<
+        destroy(first, last, std::is_trivially_destructible<
             typename std::iterator_traits<ForwardIterator>::value_type>{});
     }
 
